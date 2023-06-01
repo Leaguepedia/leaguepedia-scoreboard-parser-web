@@ -61,13 +61,14 @@ def query():
         source = request.form.get("source")
         header = request.form.get("header")
         skip_queries = request.form.get("skipQueries")
+        use_wiki_mirror = request.form.get("useWikiMirror")
         if not source or not ids:
             return {"success": False, "errors": ["You must provide at least one ID and source!"]}
         query_id = random.randint(0, 100000000000)
         while query_id in in_process:
             query_id = random.randint(0, 100000000000)
         in_process[query_id] = {"finished": False, "last_requested": time.time()}
-        parser_handler = ParserHandler(lol_site, ids, source, lock, header, skip_queries)
+        parser_handler = ParserHandler(lol_site, ids, source, lock, header, skip_queries, use_wiki_mirror)
         if parser_handler.process_input():
             return {"errors": parser_handler.errors, "success": False}
         resp = {"queryId": query_id, "totalMatches": len(parser_handler.matches)}
