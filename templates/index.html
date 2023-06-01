@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
+    <script src="static/js/1.4/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="static/css/1.12/style.css">
+    <meta name="viewport" content="initial-scale=1.0,user-scalable=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&amp;display=swap" rel="stylesheet">
+    <link href="static/fontawesome-6.3.0/css/fontawesome.css" rel="stylesheet">
+    <link href="static/fontawesome-6.3.0/css/solid.css" rel="stylesheet">
+    <title>Leaguepedia Scoreboard Parser</title>
+</head>
+<body class="theme-{{ theme }}">
+    <div id="main">
+        <h1>Leaguepedia Scoreboard Parser</h1>
+        <div id="input-area">
+            <div id="buttons">
+                <button id="clear-cache">Clear Cache</button>
+                <button id="clear-prefs">Clear User Preferences</button>
+                <i class="fa-solid fa-moon fa-lg toggle-theme"></i>
+            </div>
+            <form id="parser-form" method="post">
+                <label for="ids">IDs</label><br>
+                <textarea id="ids" name="ids" required="" spellcheck="false"></textarea><br>
+                <div class="radio-options">
+                    <span>Game Source</span>
+                    <input type="radio" class="source" name="source" value="riot" id="riot"{{ riot_checked }}><label for="riot">Riot</label>
+                    <input type="radio" class="source" name="source" value="qq" id="qq"{{ qq_checked }}><label for="qq">QQ</label>
+                    <input type="radio" class="source" name="source" value="riot-live" id="riot-live"{{ riotlive_checked }}><label for="riot-live">Riot Live</label>
+                    <br>
+                    <label for="header">Header</label>
+                    <input type="checkbox" class="header" name="header" id="header" value="yes" checked="">
+                    Check this only if you are parsing a BO1 or the first game of a series
+                    <br>
+                    <br>
+                    <div class="warning">Advanced Options (DO NOT ENABLE UNLESS YOU KNOW WHAT YOU ARE DOING!)</div>
+                    <label for="skip-queries">Skip queries to the wiki</label>
+                    <input type="checkbox" class="skip-queries" name="skip-queries" id="skip-queries" value="yes">
+                    This will disable player and team disambiguations, as well as the patch for QQ games
+                </div>
+                <input type="submit" id="submit" value="Parse">
+            </form>
+            <hr>
+            <div id="output"></div>
+        </div>
+    </div>
+</body>
+</html>
