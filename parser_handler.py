@@ -25,14 +25,14 @@ class ParserHandler(object):
         lock: Lock,
         header: str = None,
         skip_queries: str = None,
-        use_leaguepedia_mirror: bool = False,
+        use_leaguepedia_mirror: str = None,
     ):
         self.site = site
         self.game_ids = game_ids.replace(" ", "").strip()
         self.source = source
         self.header = True if header == "yes" else False
         self.skip_queries = True if skip_queries == "yes" else False
-        self.use_leaguepedia_mirror = use_leaguepedia_mirror
+        self.use_leaguepedia_mirror = True if use_leaguepedia_mirror == "yes" else False
         self.matches = []
         self.raw_output = []
         self.errors = []
