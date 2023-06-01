@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
-    <script src="static/js/1.4/main.js"></script>
+    <script src="static/js/1.5/main.js"></script>
     <link rel="stylesheet" type="text/css" href="static/css/1.12/style.css">
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,6 +39,9 @@
                     <label for="skip-queries">Skip queries to the wiki</label>
                     <input type="checkbox" class="skip-queries" name="skip-queries" id="skip-queries" value="yes">
                     This will disable player and team disambiguations, as well as the patch for QQ games
+                    <br>
+                    <label for="wiki-mirror">Get game data from the wiki</label>
+                    <input type="checkbox" class="wiki-mirror" name="wiki-mirror" id="wiki-mirror" value="yes">
                 </div>
                 <input type="submit" id="submit" value="Parse">
             </form>
