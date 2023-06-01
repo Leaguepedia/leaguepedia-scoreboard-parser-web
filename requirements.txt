@@ -1,2 +1,2 @@
-leaguepedia_sb_parser @ git+https://github.com/arbolitoloco1/leaguepedia-scoreboard-parser@a11cf1f
+leaguepedia-scoreboard-parser @ git+https://github.com/arbolitoloco1/leaguepedia-scoreboard-parser@a11cf1f
 Flask==2.3.2
