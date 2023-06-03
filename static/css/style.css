@@ -2,12 +2,14 @@
     --background-color: #242222;
     --text-color: white;
     --border-color: white;
+    --warning-color: #ffa700;
 }
 
 .theme-light {
     --background-color: white;
     --text-color: black;
     --border-color: black;
+    --warning-color: #ab0000;
 }
 
 #main {
