@@ -1,6 +1,23 @@
 var jqxhr = {abort: function () {}};
 var currentQueryId = null;
 
+function toggleTheme(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    var currentTheme = $("body").attr("class");
+    if (currentTheme == "theme-dark") {
+        var newTheme = "light"
+        $("body").removeClass("theme-dark").addClass("theme-light");
+    } else if (currentTheme == "theme-light") {
+        var newTheme = "dark"
+        $("body").removeClass("theme-light").addClass("theme-dark");
+    }
+
+    let expires = getCookieExpiration();
+
+    document.cookie = `theme=${newTheme}; expires=${expires}`;
+}
+
 function printOutput(response) {
     $('#output').html("");
     if (response.success === false) {
@@ -140,19 +157,12 @@ $(document).ready(function(){
     });
 
     $(".toggle-theme").click(function(e) {
-        e.preventDefault()
-        e.stopPropagation()
-        var currentTheme = $("body").attr("class");
-        if (currentTheme == "theme-dark") {
-            var newTheme = "light"
-            $("body").removeClass("theme-dark").addClass("theme-light");
-        } else if (currentTheme == "theme-light") {
-            var newTheme = "dark"
-            $("body").removeClass("theme-light").addClass("theme-dark");
+        toggleTheme(e);
+    });
+
+    $(".toggle-theme").on("keydown", function(e) {
+        if (e.keyCode == 13) {
+            toggleTheme(e);
         }
-
-        let expires = getCookieExpiration();
-
-        document.cookie = `theme=${newTheme}; expires=${expires}`;
     });
 });
