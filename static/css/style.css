@@ -85,6 +85,7 @@ textarea {
 }
 
 .warning {
+    transition: color 1s;
     color: var(--warning-color);
     font-weight: bold;
 }
