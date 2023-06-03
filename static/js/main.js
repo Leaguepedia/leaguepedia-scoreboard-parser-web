@@ -107,6 +107,12 @@ $(document).ready(function(){
         });
     });
 
+    $("body").on("keydown", function(e) {
+        if(e.altKey && e.keyCode == 80) {
+            $("input#submit").click();
+        }
+    });
+
     $('#clear-cache').click(function(e) {
         e.preventDefault();
         $.ajax({
