@@ -85,7 +85,7 @@ textarea {
 }
 
 .warning {
-    color: red;
+    color: var(--warning-color);
     font-weight: bold;
 }
 
