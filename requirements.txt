@@ -1,2 +1,4 @@
-leaguepedia-scoreboard-parser @ git+https://github.com/arbolitoloco1/leaguepedia-scoreboard-parser@a11cf1f
-Flask==2.3.2
+leaguepedia-scoreboard-parser @ git+https://github.com/Leaguepedia/leaguepedia-scoreboard-parser@a11cf1f
+Flask>=2.3.2
+mwrogue>=0.1.5
+pytz>=2023.3
