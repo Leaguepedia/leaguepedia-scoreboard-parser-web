@@ -27,6 +27,7 @@ function printOutput(response) {
     }
     let el = document.createElement('textarea');
 	$(el).attr('readonly', '')
+        .attr('aria-label', 'Scoreboard text ready to be copied')
 		.attr('id', 'output-scoreboard')
 		.val(response.text);
     $(el).appendTo($('#output'));
@@ -38,14 +39,18 @@ function printExceptions(exceptions) {
     if (exceptions == null) {
         return;
     }
-    let warnings = document.createElement("div");
-    $(warnings).attr("id", "output-warnings");
     exceptions.forEach(function (item) {
-        let el = document.createElement('div');
-        $(el).html(item);
-        $(el).appendTo($(warnings));
+        let el = document.createElement('span');
+        $(el).html(item).addClass("output-warning");
+        $(el).appendTo($("#output"));
     });
-    $(warnings).appendTo($("#output"));
+}
+
+function updateProgressBar(nParsedMatches, totalMatches) {
+    let nParsedMatchesInt = parseInt(nParsedMatches);
+    let totalMatchesInt = parseInt(totalMatches);
+    let progressPercentage = ((nParsedMatchesInt / totalMatchesInt) * 100).toString();
+    $("#progressbar").attr("value", progressPercentage);
 }
 
 function waitForResponse(queryId, callback) {
@@ -66,7 +71,11 @@ function waitForResponse(queryId, callback) {
                         clearInterval(interval);
                         callback(response.payload);
                     } else {
-                        $("#output").html("Doing parser magic...<br>Parsed matches " + response.nParsedMatches + "/" + response.totalMatches);
+                        var outputText = "Doing parser magic...<br>Parsed matches " + response.nParsedMatches + "/" + response.totalMatches;
+                        if ($("#output-text").html() != outputText) {
+                            $("#output-text").html(outputText);
+                            updateProgressBar(response.nParsedMatches, response.totalMatches);
+                        }
                     }
                 },
                 error: function() {
@@ -104,14 +113,21 @@ $(document).ready(function(){
                 useWikiMirror: $("input[name='wiki-mirror']:checked").val(),
             },
             beforeSend: function() {
-                $("#output").html("Doing parser magic...<br>Parsed matches 0/?");
+                $("#output").html("");
+                var outputTextObject = '<span id="output-text">Doing parser magic...<br>Parsed matches 0/?</span>';
+                var progressObject = '<progress id="progressbar" value="0" max="100"></progress>';
+                $(outputTextObject).appendTo("#output");
+                $("<br>").appendTo("#output");
+                $(progressObject).appendTo("#output");
             },
             success: function(response) {
                 if (response.errors) {
                     printOutput(response);
                     return;
                 }
-                $("#output").html("Doing parser magic...<br>Parsed matches 0/" + response.totalMatches);
+                var outputText = "Doing parser magic...<br>Parsed matches 0/" + response.totalMatches;
+                $("#output-text").html(outputText);
+                updateProgressBar(0, response.totalMatches);
                 waitForResponse(response.queryId, function(payload) {
                     if (payload) {
                         printOutput(payload);

@@ -53,6 +53,8 @@ class ParserHandler(object):
 
     def run(self):
         try:
+            if self.source == "qq" and self.use_leaguepedia_mirror:
+                raise Exception("QQ games can't be retrieved from the wiki!")
             for match in self.matches:
                 self.parse_match(match)
             output = self.make_output()
