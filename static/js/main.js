@@ -55,16 +55,13 @@ function updateProgressBar(nParsedMatches, totalMatches) {
 
 function waitForResponse(queryId, callback) {
     currentQueryId = queryId;
-    var i = 0;
     var interval = setInterval(function(queryId) {
         if (currentQueryId === queryId) {
-            i = i + 1
             $.ajax({
                 type: "GET",
                 url: "/parser/query",
                 data: {
                     queryId: queryId,
-                    iteration: i,
                 },
                 success: function(response) {
                     if (response.ready === true) {
