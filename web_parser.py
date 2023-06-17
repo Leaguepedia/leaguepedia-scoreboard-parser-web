@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, Response, make_response
+from flask import Flask, render_template, request, redirect, Response
 from parser_handler import ParserHandler
 from mwrogue.esports_client import EsportsClient
 from threading import Thread, Lock
