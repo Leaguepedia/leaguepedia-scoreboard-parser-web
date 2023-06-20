@@ -123,4 +123,11 @@ textarea {
 
 input.btn {
     background-color: #28a745;
+    width: 100%;
+}
+
+.submit-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
