@@ -99,3 +99,6 @@ def clearcache():
             return {"success": False}
         return {"success": True}
 
+
+if __name__ == "__main__":
+    app.run()
