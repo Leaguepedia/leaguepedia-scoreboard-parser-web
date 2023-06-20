@@ -3,6 +3,9 @@
     --text-color: white;
     --border-color: white;
     --warning-color: #ffa700;
+    --button-color: #242222;
+    --button-background-color: white;
+    --button-background-color-hover: 
 }
 
 .theme-light {
@@ -10,6 +13,9 @@
     --text-color: black;
     --border-color: black;
     --warning-color: #ab0000;
+    --button-color: white;
+    --button-background-color: black;
+    --button-background-color-hover: 
 }
 
 #main {
@@ -98,4 +104,23 @@ textarea {
 
 .toggle-theme {
     cursor: pointer;
+}
+
+.btn {
+	border: 1px solid transparent;
+	background-color: var(--button-background-color);
+    color: var(--button-color);
+	border-radius: .25rem;
+	padding: 0.25rem;
+	font-size: 1rem;
+	font-family: inherit;
+    transition: color 1s, background 1s;
+}
+
+.btn:hover {
+    cursor: pointer;
+}
+
+input.btn {
+    background-color: #28a745;
 }

@@ -17,10 +17,10 @@
         <h1>Leaguepedia Scoreboard Parser</h1>
         <div id="input-area">
             <div id="buttons">
-                <button id="clear-cache">Clear Cache</button>
-                <button id="clear-prefs">Clear User Preferences</button>
+                <button id="clear-cache" class="btn">Clear Cache</button>
+                <button id="clear-prefs" class="btn">Clear User Preferences</button>
                 <div tabindex="0" class="toggle-theme" role="button" aria-label="Toggle theme">
-                    <i class="fa-solid fa-moon fa-lg"></i>
+                    <i class="fa-solid fa-moon fa-xl"></i>
                 </div>
             </div>
             <form id="parser-form" method="post" aria-label="Form used to input the game data to be parsed">
@@ -48,7 +48,7 @@
                         <input type="checkbox" class="wiki-mirror" name="wiki-mirror" id="wiki-mirror" value="yes">
                     </section>
                 </div>
-                <input type="submit" id="submit" title="Parse the games (Alt + P)" value="Parse">
+                <input type="submit" id="submit" class="btn" title="Parse the games (Alt + P)" value="Parse">
             </form>
             <hr>
             <div role="region" id="output" aria-live="polite" aria-label="Parser output"></div>
