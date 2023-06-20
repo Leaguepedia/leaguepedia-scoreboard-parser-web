@@ -70,13 +70,12 @@ class ParserHandler(object):
         stats["executions"].append(
             {
                 "game_ids": self.matches,
-                "date": datetime.now().astimezone(
-                        tz=pytz.timezone("America/Argentina/Buenos_Aires")
-                        ).strftime("%Y-%m-%d %H:%M:%S"),
+                "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "header": self.header,
                 "skip_queries": self.skip_queries,
                 "tournament": self.event_link,
                 "source": self.source,
+                "use_leaguepedia_mirror": self.use_leaguepedia_mirror
             }
         )
         self.save_statistics(stats)
