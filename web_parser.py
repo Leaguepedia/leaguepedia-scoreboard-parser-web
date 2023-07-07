@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, Response
+from flaskext.autoversion import Autoversion
 from parser_handler import ParserHandler
 from mwrogue.esports_client import EsportsClient
 from threading import Thread, Lock
@@ -6,6 +7,8 @@ import random
 import time
 
 app = Flask(__name__)
+app.autoversion = True
+Autoversion(app)
 
 lol_site = EsportsClient("lol")
 
