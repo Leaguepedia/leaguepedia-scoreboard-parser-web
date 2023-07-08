@@ -1,5 +1,5 @@
 var jqxhr = {abort: function () {}};
-var currentQueryId = null;
+var interval;
 
 function toggleTheme(e) {
     e.preventDefault()
@@ -67,36 +67,31 @@ function updateProgressBar(nParsedMatches, totalMatches) {
 }
 
 function waitForResponse(queryId, callback) {
-    currentQueryId = queryId;
-    var interval = setInterval(function(queryId) {
-        if (currentQueryId === queryId) {
-            $.ajax({
-                type: "GET",
-                url: "/parser/query",
-                data: {
-                    queryId: queryId,
-                },
-                success: function(response) {
-                    if (response.ready === true) {
-                        clearInterval(interval);
-                        callback(response.payload);
-                    } else {
-                        var outputText = "Doing parser magic...<br>Parsed matches " + response.nParsedMatches + "/" + response.totalMatches;
-                        if ($("#output-text").html() != outputText) {
-                            $("#output-text").html(outputText);
-                            updateProgressBar(response.nParsedMatches, response.totalMatches);
-                        }
-                    }
-                },
-                error: function() {
-                    $("#output").html("An error has occured! Please try again.");
+    interval = setInterval(function(queryId) {
+        $.ajax({
+            type: "GET",
+            url: "/parser/query",
+            data: {
+                queryId: queryId,
+            },
+            success: function(response) {
+                if (response.ready === true) {
                     clearInterval(interval);
-                    callback(null);
-                },
-            });
-        } else {
-            clearInterval(interval);
-        };
+                    callback(response.payload);
+                } else {
+                    var outputText = "Doing parser magic...<br>Parsed matches " + response.nParsedMatches + "/" + response.totalMatches;
+                    if ($("#output-text").html() != outputText) {
+                        $("#output-text").html(outputText);
+                        updateProgressBar(response.nParsedMatches, response.totalMatches);
+                    }
+                }
+            },
+            error: function() {
+                $("#output").html("An error has occured! Please try again.");
+                clearInterval(interval);
+                callback(null);
+            },
+        });
     }, 5000, queryId);
 }
 
@@ -112,6 +107,7 @@ $(document).ready(function(){
         e.preventDefault();
         let source = $("input[name='source']:checked").val();
         localStorage.setItem("prefsSource", source);
+        clearInterval(interval);
         jqxhr.abort();
         jqxhr = $.ajax({
             type: 'POST',
@@ -159,6 +155,8 @@ $(document).ready(function(){
 
     $('#clear-cache').click(function(e) {
         e.preventDefault();
+        clearInterval(interval);
+        jqxhr.abort();
         $.ajax({
             type: 'POST',
             url: '/clearcache',
