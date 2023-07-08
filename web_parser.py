@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, Response
+from flask import Flask, render_template, request
 from flaskext.autoversion import Autoversion
 from parser_handler import ParserHandler
 from mwrogue.esports_client import EsportsClient
@@ -15,11 +15,6 @@ lol_site = EsportsClient("lol")
 lock = Lock()
 
 in_process = {}
-
-
-@app.route("/")
-def index():
-    return redirect("https://leaguepedia.net/parser", code=301)
 
 
 @app.route('/parser')
@@ -68,7 +63,7 @@ def query():
             return {"errors": parser_handler.errors, "success": False}
         resp = {"queryId": query_id, "totalMatches": len(parser_handler.matches)}
         Thread(target=parse_scoreboard, args=[parser_handler, query_id]).start()
-        return resp
+        return resp, 202
 
 
 def parse_scoreboard(parser_handler, query_id):

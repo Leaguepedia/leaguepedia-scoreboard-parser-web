@@ -7,7 +7,6 @@ import traceback
 import os
 import json
 from datetime import datetime
-import pytz
 from threading import Lock
 
 
