@@ -4,18 +4,31 @@ var currentQueryId = null;
 function toggleTheme(e) {
     e.preventDefault()
     e.stopPropagation()
-    var currentTheme = $("body").attr("class");
-    if (currentTheme == "theme-dark") {
-        var newTheme = "light"
-        $("body").removeClass("theme-dark").addClass("theme-light");
-    } else if (currentTheme == "theme-light") {
-        var newTheme = "dark"
-        $("body").removeClass("theme-light").addClass("theme-dark");
+    var currentTheme = $(document.documentElement).attr("data-theme");
+    var newTheme;
+    if (currentTheme == "dark") {
+        newTheme = "light";
+        $(document.documentElement).attr("data-theme", newTheme);
+    } else {
+        newTheme = "dark";
+        $(document.documentElement).attr("data-theme", newTheme);
     }
 
-    let expires = getCookieExpiration();
+    localStorage.setItem("theme", newTheme);
+}
 
-    document.cookie = `theme=${newTheme}; expires=${expires}`;
+function checkSource(source) {
+    if (source == null) {
+        source = "riot";
+    }
+    const availableSources = ["riot", "riot-live", "qq"]
+    $("#" + source).prop('checked', true);
+    availableSources.forEach(function(sourceUnchecked) {
+        if (sourceUnchecked == source) {
+            return;
+        }
+        $("#" + sourceUnchecked).prop('checked', false);
+    });
 }
 
 function printOutput(response) {
@@ -87,17 +100,18 @@ function waitForResponse(queryId, callback) {
     }, 5000, queryId);
 }
 
-function getCookieExpiration() {
-    const d = new Date();
-    return d.toUTCString(d.setTime(d.getTime() + (3650*24*60*60*1000)));
+function loadUserPreferences() {
+    var prefsSource = localStorage.getItem("prefsSource");
+    checkSource(prefsSource);
 }
 
 $(document).ready(function(){
+    loadUserPreferences();
+
     $('#parser-form').submit(function(e) {
         e.preventDefault();
         let source = $("input[name='source']:checked").val();
-        let expires = getCookieExpiration();
-        document.cookie = `prefsSource=${source}; expires=${expires};`
+        localStorage.setItem("prefsSource", source);
         jqxhr.abort();
         jqxhr = $.ajax({
             type: 'POST',
@@ -161,12 +175,9 @@ $(document).ready(function(){
     });
 
     $('#clear-prefs').click(function() {
-        document.cookie = "prefsSource=; expires=Thu, 01 Jan 1970 00:00:00 UTC;"
-        document.cookie = "theme=; expires=Thu, 01 Jan 1970 00:00:00 UTC;"
-        $("#riot").prop('checked', true);
-        $("#riot-live").prop('checked', false);
-        $("#qq").prop('checked', false);
-        $("body").removeClass("theme-light").addClass("theme-dark");
+        localStorage.clear()
+        checkSource("riot");
+        $(document.documentElement).attr("data-theme", "dark");
     });
 
     $(".toggle-theme").click(function(e) {

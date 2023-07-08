@@ -24,15 +24,7 @@ def index():
 
 @app.route('/parser')
 def parser():
-    source_preference = request.cookies.get("prefsSource")
-    theme = request.cookies.get("theme", "dark")
-    riot_checked = " checked" if source_preference == "riot" or source_preference is None else ""
-    riotlive_checked = " checked" if source_preference == "riot-live" else ""
-    qq_checked = " checked" if source_preference == "qq" else ""
-    resp = Response(render_template('index.html', riot_checked=riot_checked, qq_checked=qq_checked,
-                                    riotlive_checked=riotlive_checked, theme=theme)
-                    )
-    return resp
+    return render_template('index.html')
 
 
 @app.route("/parser/query", methods=["GET", "POST"])

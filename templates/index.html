@@ -2,6 +2,15 @@
 <html lang="en">
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
+    <script>
+        var userTheme = localStorage.getItem("theme");
+
+        if (userTheme == "light") {
+            document.documentElement.setAttribute("data-theme", "light");
+        } else {
+            document.documentElement.setAttribute("data-theme", "dark");
+        }
+    </script>
     <script src="{{ static_autoversion('js/main.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ static_autoversion('css/style.css') }}">
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no">
@@ -12,7 +21,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/solid.min.css" integrity="sha512-bdTSJB23zykBjGDvyuZUrLhHD0Rfre0jxTd0/jpTbV7sZL8DCth/88aHX0bq2RV8HK3zx5Qj6r2rRU/Otsjk+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Leaguepedia Scoreboard Parser</title>
 </head>
-<body class="theme-{{ theme }}">
+<body>
     <div id="main">
         <h1>Leaguepedia Scoreboard Parser</h1>
         <div id="input-area">
@@ -28,9 +37,9 @@
                 <textarea id="ids" name="ids" required="" spellcheck="false"></textarea><br>
                 <div class="radio-options">
                     <span>Game Source</span>
-                    <input type="radio" class="source" name="source" value="riot" id="riot"{{ riot_checked }}><label for="riot">Riot</label>
-                    <input type="radio" class="source" name="source" value="qq" id="qq"{{ qq_checked }}><label for="qq">QQ</label>
-                    <input type="radio" class="source" name="source" value="riot-live" id="riot-live"{{ riotlive_checked }}><label for="riot-live">Riot Live</label>
+                    <input type="radio" class="source" name="source" value="riot" id="riot"><label for="riot">Riot</label>
+                    <input type="radio" class="source" name="source" value="qq" id="qq"><label for="qq">QQ</label>
+                    <input type="radio" class="source" name="source" value="riot-live" id="riot-live"><label for="riot-live">Riot Live</label>
                     <br>
                     <label for="header">Header</label>
                     <input type="checkbox" class="header" name="header" id="header" value="yes" checked="" aria-describedby="header-desc">
