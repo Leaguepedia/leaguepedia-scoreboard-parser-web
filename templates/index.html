@@ -4,7 +4,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK" crossorigin="anonymous"></script>
     <script>
         var userTheme = localStorage.getItem("theme");
-        document.documentElement.setAttribute("data-theme", userTheme);
+        if (userTheme) {
+            document.documentElement.setAttribute("data-theme", userTheme);
+        }
     </script>
     <script src="{{ static_autoversion('js/main.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ static_autoversion('css/style.css') }}">
