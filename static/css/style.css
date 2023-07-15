@@ -9,7 +9,7 @@ html[data-theme="dark"] {
 }
 
 html[data-theme="light"] {
-    --background-color: white;
+    --background-color: #eff3f5;
     --text-color: black;
     --border-color: black;
     --warning-color: #ab0000;
