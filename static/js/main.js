@@ -1,5 +1,7 @@
 var jqxhr = {abort: function () {}};
-var interval;
+var timeout;
+var retries = 0;
+const MAX_RETRIES = 3;
 
 function toggleTheme(e) {
     e.preventDefault()
@@ -66,38 +68,91 @@ function updateProgressBar(nParsedMatches, totalMatches) {
     $("#progressbar").attr("value", progressPercentage);
 }
 
-function waitForResponse(queryId, callback) {
-    interval = setInterval(function(queryId) {
-        $.ajax({
-            type: "GET",
-            url: "/parser/query",
-            data: {
-                queryId: queryId,
-            },
-            success: function(response) {
-                if (response.ready === true) {
-                    clearInterval(interval);
-                    callback(response.payload);
-                } else {
-                    var outputText = "Doing parser magic...<br>Parsed matches " + response.nParsedMatches + "/" + response.totalMatches;
-                    if ($("#output-text").html() != outputText) {
-                        $("#output-text").html(outputText);
-                        updateProgressBar(response.nParsedMatches, response.totalMatches);
-                    }
-                }
-            },
-            error: function() {
-                $("#output").html("An error has occured! Please try again.");
-                clearInterval(interval);
-                callback(null);
-            },
-        });
-    }, 5000, queryId);
-}
-
 function loadUserPreferences() {
     var prefsSource = localStorage.getItem("prefsSource");
     checkSource(prefsSource);
+}
+
+function startParser() {
+    retries = 0;
+    let source = $("input[name='source']:checked").val();
+    localStorage.setItem("prefsSource", source);
+    clearTimeout(timeout);
+    jqxhr.abort();
+    jqxhr = $.ajax({
+        type: 'POST',
+        url: '/parser/query',
+        data: {
+            ids: $("#ids").val(),
+            source: source,
+            header: $("input[name='header']:checked").val(),
+            skipQueries: $("input[name='skip-queries']:checked").val(),
+            useWikiMirror: $("input[name='wiki-mirror']:checked").val(),
+        },
+        beforeSend: function() {
+            $("#output").html("");
+            var outputTextObject = '<span id="output-text">Doing parser magic...<br>Parsed matches 0/?</span>';
+            var progressObject = '<progress id="progressbar" value="0" max="100"></progress>';
+            $(outputTextObject).appendTo("#output");
+            $("<br>").appendTo("#output");
+            $(progressObject).appendTo("#output");
+        },
+        success: function(response) {
+            if (response.errors) {
+                printOutput(response);
+                return;
+            }
+            var outputText = "Doing parser magic...<br>Parsed matches 0/" + response.totalMatches;
+            $("#output-text").html(outputText);
+            updateProgressBar(0, response.totalMatches);
+            timeout = setTimeout(function(response) {
+                queryParserProgress(response.queryId, function(payload) {
+                    if (payload) {
+                        printOutput(payload);
+                    }
+                });
+            }, 5000, response);
+        },
+        error: function() {
+            $("#output").html("An error has occured! Please try again.");
+        }
+    });
+}
+
+function queryParserProgress(queryId, callback) {
+    jqxhr = $.ajax({
+        type: "GET",
+        url: "/parser/query",
+        data: {
+            queryId: queryId,
+        },
+        success: function(response) {
+            retries = 0;
+            if (response.ready === true) {
+                callback(response.payload);
+            } else {
+                var outputText = "Doing parser magic...<br>Parsed matches " + response.nParsedMatches + "/" + response.totalMatches;
+                if ($("#output-text").html() != outputText) {
+                    $("#output-text").html(outputText);
+                    updateProgressBar(response.nParsedMatches, response.totalMatches);
+                }
+                timeout = setTimeout(function(queryId, callback) { 
+                    queryParserProgress(queryId, callback) 
+                }, 5000, queryId, callback);
+            }
+        },
+        error: function() {
+            if ( retries >= MAX_RETRIES ) {
+                $("#output").html("An error has occured! Please try again.");
+                callback(null);
+            } else {
+                retries++;
+                timeout = setTimeout(function(queryId, callback) { 
+                    queryParserProgress(queryId, callback) 
+                }, 5000, queryId, callback);
+            }
+        },
+    });
 }
 
 $(document).ready(function(){
@@ -105,46 +160,7 @@ $(document).ready(function(){
 
     $('#parser-form').submit(function(e) {
         e.preventDefault();
-        let source = $("input[name='source']:checked").val();
-        localStorage.setItem("prefsSource", source);
-        clearInterval(interval);
-        jqxhr.abort();
-        jqxhr = $.ajax({
-            type: 'POST',
-            url: '/parser/query',
-            data: {
-                ids: $("#ids").val(),
-                source: source,
-                header: $("input[name='header']:checked").val(),
-                skipQueries: $("input[name='skip-queries']:checked").val(),
-                useWikiMirror: $("input[name='wiki-mirror']:checked").val(),
-            },
-            beforeSend: function() {
-                $("#output").html("");
-                var outputTextObject = '<span id="output-text">Doing parser magic...<br>Parsed matches 0/?</span>';
-                var progressObject = '<progress id="progressbar" value="0" max="100"></progress>';
-                $(outputTextObject).appendTo("#output");
-                $("<br>").appendTo("#output");
-                $(progressObject).appendTo("#output");
-            },
-            success: function(response) {
-                if (response.errors) {
-                    printOutput(response);
-                    return;
-                }
-                var outputText = "Doing parser magic...<br>Parsed matches 0/" + response.totalMatches;
-                $("#output-text").html(outputText);
-                updateProgressBar(0, response.totalMatches);
-                waitForResponse(response.queryId, function(payload) {
-                    if (payload) {
-                        printOutput(payload);
-                    }
-                });
-            },
-            error: function() {
-                $("#output").html("An error has occured! Please try again.");
-            }
-        });
+        startParser();
     });
 
     $("body").on("keydown", function(e) {
@@ -155,7 +171,7 @@ $(document).ready(function(){
 
     $('#clear-cache').click(function(e) {
         e.preventDefault();
-        clearInterval(interval);
+        clearTimeout(timeout);
         jqxhr.abort();
         $.ajax({
             type: 'POST',
