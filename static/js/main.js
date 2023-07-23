@@ -36,7 +36,7 @@ function checkSource(source) {
 function printOutput(response) {
     $('#output').html("");
     if (response.success === false) {
-        $("#output").html("An error has occured:");
+        $("#output").html("An error has occurred:");
         printExceptions(response.errors);
         return;
     }
@@ -114,7 +114,7 @@ function startParser() {
             }, 5000, response);
         },
         error: function() {
-            $("#output").html("An error has occured! Please try again.");
+            $("#output").html("An error has occurred! Please try again.");
         }
     });
 }
@@ -143,7 +143,7 @@ function queryParserProgress(queryId, callback) {
         },
         error: function() {
             if ( retries >= MAX_RETRIES ) {
-                $("#output").html("An error has occured! Please try again.");
+                $("#output").html("An error has occurred! Please try again.");
                 callback(null);
             } else {
                 retries++;
@@ -183,7 +183,7 @@ $(document).ready(function(){
                 $("#output").html("Done!");
             },
             error: function() {
-                $("#output").html("An error has occured! Please try again.");
+                $("#output").html("An error has occurred! Please try again.");
             }
         });
     });
