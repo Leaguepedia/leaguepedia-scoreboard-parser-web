@@ -34,6 +34,7 @@ body {
 
 h1 {
     font-weight: bold;
+    text-align: center;
 }
 
 #buttons {
@@ -42,7 +43,7 @@ h1 {
     margin-bottom: 10px;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 20px;
 }
 
 @media only screen and (min-width: 768px) {
@@ -130,4 +131,5 @@ input.btn {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-top: 10px;
 }
