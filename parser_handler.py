@@ -64,25 +64,26 @@ class ParserHandler(object):
         return output, self.errors, self.warnings
 
     def update_statistics(self):
-        stats = self.open_statistics()
-        stats["times_ran"] += 1
-        stats["executions"].append(
-            {
-                "game_ids": self.matches,
-                "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "header": self.header,
-                "skip_queries": self.skip_queries,
-                "tournament": self.event_link,
-                "source": self.source,
-                "use_leaguepedia_mirror": self.use_leaguepedia_mirror
-            }
-        )
-        self.save_statistics(stats)
-
-    def save_statistics(self, stats):
         with self.lock:
-            with open(file="stats.json", mode="w+", encoding="utf8") as f:
-                json.dump(stats, f, ensure_ascii=False, indent=4)
+            stats = self.open_statistics()
+            stats["times_ran"] += 1
+            stats["executions"].append(
+                {
+                    "game_ids": self.matches,
+                    "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "header": self.header,
+                    "skip_queries": self.skip_queries,
+                    "tournament": self.event_link,
+                    "source": self.source,
+                    "use_leaguepedia_mirror": self.use_leaguepedia_mirror
+                }
+            )
+            self.save_statistics(stats)
+
+    @staticmethod
+    def save_statistics(stats):
+        with open(file="stats.json", mode="w+", encoding="utf8") as f:
+            json.dump(stats, f, ensure_ascii=False, indent=4)
 
     @staticmethod
     def open_statistics():
