@@ -6,13 +6,12 @@ const MAX_RETRIES = 3;
 function toggleTheme(e) {
     e.preventDefault()
     e.stopPropagation()
-    var currentTheme = $(document.documentElement).attr("data-theme");
-    var newTheme;
+    let currentTheme = $(document.documentElement).attr("data-theme");
     if (currentTheme == "dark") {
-        newTheme = "light";
+        var newTheme = "light";
         $(document.documentElement).attr("data-theme", newTheme);
     } else {
-        newTheme = "dark";
+        var newTheme = "dark";
         $(document.documentElement).attr("data-theme", newTheme);
     }
 
@@ -69,7 +68,7 @@ function updateProgressBar(nParsedMatches, totalMatches) {
 }
 
 function loadUserPreferences() {
-    var prefsSource = localStorage.getItem("prefsSource");
+    let prefsSource = localStorage.getItem("prefsSource");
     checkSource(prefsSource);
 }
 
@@ -91,8 +90,8 @@ function startParser() {
         },
         beforeSend: function() {
             $("#output").html("");
-            var outputTextObject = '<span id="output-text">Doing parser magic...<br>Parsed matches 0/?</span>';
-            var progressObject = '<progress id="progressbar" value="0" max="100"></progress>';
+            let outputTextObject = '<span id="output-text">Doing parser magic...<br>Parsed matches 0/?</span>';
+            let progressObject = '<progress id="progressbar" value="0" max="100"></progress>';
             $(outputTextObject).appendTo("#output");
             $("<br>").appendTo("#output");
             $(progressObject).appendTo("#output");
@@ -102,7 +101,7 @@ function startParser() {
                 printOutput(response);
                 return;
             }
-            var outputText = "Doing parser magic...<br>Parsed matches 0/" + response.totalMatches;
+            let outputText = "Doing parser magic...<br>Parsed matches 0/" + response.totalMatches;
             $("#output-text").html(outputText);
             updateProgressBar(0, response.totalMatches);
             timeout = setTimeout(function(response) {
@@ -131,7 +130,7 @@ function queryParserProgress(queryId, callback) {
             if (response.ready === true) {
                 callback(response.payload);
             } else {
-                var outputText = "Doing parser magic...<br>Parsed matches " + response.nParsedMatches + "/" + response.totalMatches;
+                let outputText = "Doing parser magic...<br>Parsed matches " + response.nParsedMatches + "/" + response.totalMatches;
                 if ($("#output-text").html() != outputText) {
                     $("#output-text").html(outputText);
                     updateProgressBar(response.nParsedMatches, response.totalMatches);
