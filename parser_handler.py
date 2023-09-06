@@ -7,7 +7,7 @@ import traceback
 import os
 import json
 from datetime import datetime
-from threading import Lock
+from filelock import FileLock
 
 
 class ParserHandler(object):
@@ -21,7 +21,6 @@ class ParserHandler(object):
         site: EsportsClient,
         game_ids: str,
         source: str,
-        lock: Lock,
         header: str = None,
         skip_queries: str = None,
         use_leaguepedia_mirror: str = None,
@@ -38,7 +37,7 @@ class ParserHandler(object):
         self.warnings = []
         self.event_link = None
         self.parsed_matches = 0
-        self.lock = lock
+        self.lock = FileLock("stats.json.lock", timeout=60)
 
     def process_input(self):
         try:

@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from flaskext.autoversion import Autoversion
 from parser_handler import ParserHandler
 from mwrogue.esports_client import EsportsClient
-from threading import Thread, Lock
+from threading import Thread
 import random
 import time
 
@@ -11,8 +11,6 @@ app.autoversion = True
 Autoversion(app)
 
 lol_site = EsportsClient("lol")
-
-lock = Lock()
 
 in_process = {}
 
@@ -58,7 +56,7 @@ def query():
         while query_id in in_process:
             query_id = random.randint(0, 100000000000)
         in_process[query_id] = {"finished": False, "last_requested": time.time()}
-        parser_handler = ParserHandler(lol_site, ids, source, lock, header, skip_queries, use_wiki_mirror)
+        parser_handler = ParserHandler(lol_site, ids, source, header, skip_queries, use_wiki_mirror)
         if parser_handler.process_input():
             return {"errors": parser_handler.errors, "success": False}
         resp = {"queryId": query_id, "totalMatches": len(parser_handler.matches)}
