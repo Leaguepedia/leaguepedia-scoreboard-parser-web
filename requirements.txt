@@ -1,6 +1,6 @@
-leaguepedia-scoreboard-parser @ git+https://github.com/Leaguepedia/leaguepedia-scoreboard-parser@a11cf1f
-Flask>=2.3.2
-mwrogue>=0.1.5
-pytz>=2023.3
-Flask-Autoversion>=0.2.0
-filelock>=3.12.3
+leaguepedia-scoreboard-parser
+Flask
+mwrogue
+pytz
+Flask-Autoversion
+filelock
