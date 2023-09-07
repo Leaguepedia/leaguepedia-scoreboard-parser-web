@@ -52,9 +52,10 @@ def query():
         use_wiki_mirror = request.form.get("useWikiMirror")
         if not source or not ids:
             return {"success": False, "errors": ["You must provide at least one ID and source!"]}
-        query_id = random.randint(0, 100000000000)
-        while query_id in in_process:
+        while True:
             query_id = random.randint(0, 100000000000)
+            if query_id not in in_process:
+                break
         in_process[query_id] = {"finished": False, "last_requested": time.time()}
         parser_handler = ParserHandler(lol_site, ids, source, header, skip_queries, use_wiki_mirror)
         if parser_handler.process_input():
