@@ -1,4 +1,4 @@
-leaguepedia-scoreboard-parser
+leaguepedia-scoreboard-parser @ git+https://github.com/Leaguepedia/leaguepedia-scoreboard-parser
 Flask
 mwrogue
 pytz
