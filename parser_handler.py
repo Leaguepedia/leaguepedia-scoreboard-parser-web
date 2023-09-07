@@ -4,10 +4,6 @@ from leaguepedia_sb_parser.qq_parser import QQParser
 from leaguepedia_sb_parser.components.errors import InvalidGameSource, EventCannotBeLocated, InvalidInput
 from mwrogue.esports_client import EsportsClient
 import traceback
-import os
-import json
-from datetime import datetime
-from filelock import FileLock
 
 
 class ParserHandler(object):
@@ -37,7 +33,6 @@ class ParserHandler(object):
         self.warnings = []
         self.event_link = None
         self.parsed_matches = 0
-        self.lock = FileLock("stats.json.lock", timeout=60)
 
     def process_input(self):
         try:
@@ -56,42 +51,10 @@ class ParserHandler(object):
             for match in self.matches:
                 self.parse_match(match)
             output = self.make_output()
-            self.update_statistics()
         except:
             output = None
             self.errors.append(traceback.format_exc().replace("\n", "<br>"))
         return output, self.errors, self.warnings
-
-    def update_statistics(self):
-        with self.lock:
-            stats = self.open_statistics()
-            stats["times_ran"] += 1
-            stats["executions"].append(
-                {
-                    "game_ids": self.matches,
-                    "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "header": self.header,
-                    "skip_queries": self.skip_queries,
-                    "tournament": self.event_link,
-                    "source": self.source,
-                    "use_leaguepedia_mirror": self.use_leaguepedia_mirror
-                }
-            )
-            self.save_statistics(stats)
-
-    @staticmethod
-    def save_statistics(stats):
-        with open(file="stats.json", mode="w+", encoding="utf8") as f:
-            json.dump(stats, f, ensure_ascii=False, indent=4)
-
-    @staticmethod
-    def open_statistics():
-        if not os.path.isfile("stats.json"):
-            with open(file="stats.json", mode="w+", encoding="utf8") as f:
-                json.dump({"times_ran": 0, "executions": []}, f, ensure_ascii=False)
-        with open(file="stats.json", mode="r+", encoding="utf8") as f:
-            stats = json.load(f)
-        return stats
 
     def split_game_ids(self):
         for match in self.game_ids.split("\n\n"):
