@@ -145,4 +145,5 @@ input.btn {
 #wiki-mirror-desc {
     font-weight: bold;
     color: var(--warning-color);
+    transition: color 1s;
 }
