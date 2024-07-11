@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-    <script src="static/vendor/jquery/jquery-3.7.0.min.js"></script>
     <script>
         var userTheme = localStorage.getItem("theme");
         if (userTheme) {
             document.documentElement.setAttribute("data-theme", userTheme);
         }
     </script>
+    <script src="static/vendor/jquery/jquery-3.7.0.min.js"></script>
     <script src="{{ static_autoversion('js/main.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ static_autoversion('css/style.css') }}">
     <meta name="viewport" content="initial-scale=1.0">
