@@ -1,4 +1,4 @@
-from leaguepedia_sb_parser.bayes_parser import BayesParser
+from leaguepedia_sb_parser.grid_parser import GridParser
 from leaguepedia_sb_parser.live_parser import LiveParser
 from leaguepedia_sb_parser.qq_parser import QQParser
 from leaguepedia_sb_parser.components.errors import InvalidGameSource, EventCannotBeLocated, InvalidInput
@@ -115,7 +115,7 @@ class ParserHandler(object):
 
     def parse_match(self, match):
         if self.source == "riot":
-            parser = BayesParser(self.site, self.event_link,
+            parser = GridParser(self.site, self.event_link,
                                  use_leaguepedia_mirror=self.use_leaguepedia_mirror)
         elif self.source == "riot-live":
             parser = LiveParser(self.site, self.event_link)
