@@ -24,7 +24,6 @@ def parser():
 @app.before_request
 def cleanup_old_tasks():
     global tasks
-    print(tasks)
     five_min_ago = datetime.now().timestamp() - 5 * 60
     tasks = {task_id: task_data for task_id, task_data in tasks.items()
              if "finish_time" not in task_data or task_data["finish_time"] > five_min_ago}
