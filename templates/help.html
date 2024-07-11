@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parser usage help</title>
+</head>
+<body>
+    <h1>Parser usage help</h1>
+    <p>This website takes Riot game IDs or QQ match IDs (used in the Chinese server) and generates scoreboards for them. The output scoreboard text is intended to be pasted on Leaguepedia.</p>
+    <span>Important information:</span>
+    <ul>
+        <li>Remember that the IDs must be entered in Data before parsing scoreboards for them, otherwise the parser will throw an error.</li>
+        <li>Do NOT change anything (player names, items, tournament, etc.) in the output text. If one of the players has a red link you need to create a redirect.</li>
+        <li>If the parser returns warnings below the output, check if all the players are already in the participants section of the tournament, and click Clear Cache. If it still fails you can ask for help on Discord, but don't copy scoreboards in the wiki if there are warnings you don't understand.</li>
+        <li>If you get warnings that you already fixed, click Clear Cache.</li>
+        <li>If you are parsing QQ IDs, keep in mind that the patch is taken from Data, so make sure the patch is correctly entered there.</li>
+        <li>Ask on Discord if you are unsure about something.</li>
+    </ul>
+    <h2>IDs:</h2>
+    <p>You should fill the game/series IDs here. If you are using Riot game IDs, you need to enter one ID per line, you can also separate multiple series with blank lines. If you are using QQ series IDs, you have to leave one blank line between each other.</p>
+    <h3>Usage examples:</h3>
+    <label for="ids1">IDs (Riot)</label><br>
+    <textarea id="ids1" readonly style="height: 130px;width: 30%;resize: none;">
+game1_series1
+game2_series1
+game3_series1
+
+game1_series2
+game2_series2
+    </textarea><br>
+    <label for="ids2">IDs (QQ)</label><br>
+    <textarea id="ids2" readonly style="height: 130px;width: 30%;resize: none;">
+1234
+
+1235
+
+1236
+    </textarea>
+    <h2>Game Source:</h2>
+    <p>If you are parsing QQ IDs, select QQ. Otherwise, select Riot if the games were played on the tournament realm (in this case the ids start with ESPORTSTMNT or LOLTMNT), or Riot Live if they were played on a live server. Most times Riot is the correct option. Your selection will be remembered the next time you open the page.</p>
+    <h2>Include header:</h2>
+    <p>Whether to include the series header in each parsed series. Only check this option if you are parsing a Best of 1 or the first game of series.</p>
+</body>
+</html>
