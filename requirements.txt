@@ -3,4 +3,3 @@ Flask
 mwrogue
 pytz
 Flask-Autoversion
-filelock

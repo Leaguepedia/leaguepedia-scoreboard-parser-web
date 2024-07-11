@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request
 from flaskext.autoversion import Autoversion
+
 from parser_handler import ParserHandler
 from mwrogue.esports_client import EsportsClient
 from threading import Thread
-import random
-import time
+import uuid
+from datetime import datetime
 
 app = Flask(__name__)
 app.autoversion = True
@@ -12,7 +13,7 @@ Autoversion(app)
 
 lol_site = EsportsClient("lol")
 
-in_process = {}
+tasks = {}
 
 
 @app.route('/parser')
@@ -20,73 +21,75 @@ def parser():
     return render_template('index.html')
 
 
+@app.before_request
+def cleanup_old_tasks():
+    global tasks
+    print(tasks)
+    five_min_ago = datetime.now().timestamp() - 5 * 60
+    tasks = {task_id: task_data for task_id, task_data in tasks.items()
+             if "finish_time" not in task_data or task_data["finish_time"] > five_min_ago}
+
+
 @app.route("/parser/query", methods=["GET", "POST"])
 def query():
     if request.method == "GET":
-        query_id = int(request.args.get("queryId"))
-        if query_id not in in_process:
+        task_id = request.args.get("queryId")
+
+        if not task_id:
+            return "", 400
+
+        if task_id not in tasks:
             return "", 404
-        if not in_process[query_id]["finished"]:
-            in_process[query_id]["last_requested"] = time.time()
-            parser_handler = in_process[query_id]["parser_handler"]
-            n_parsed_matches = parser_handler.parsed_matches
-            total_matches = len(parser_handler.matches)
-            return {"ready": False, "nParsedMatches": n_parsed_matches, "totalMatches": total_matches}
+
+        if "return_data" not in tasks[task_id]:
+            parser_handler = tasks[task_id]["parser_handler"]
+            n_parsed_matches = parser_handler.n_parsed_matches
+            total_matches = len(parser_handler.game_ids)
+            return {"ready": False, "nParsedMatches": n_parsed_matches, "totalMatches": total_matches}, 202
         else:
-            payload = in_process[query_id]["data"]
-            if payload["errors"]:
-                success = False
-            else:
-                success = True
-            payload["success"] = success
-            del in_process[query_id]
+            payload = tasks[task_id]["return_data"]
+            payload["success"] = False if payload["errors"] else True
+            del tasks[task_id]
             return {"ready": True, "payload": payload}
     elif request.method == "POST":
-        for process in in_process.values():
-            if (time.time() - process["last_requested"]) > 60:
-                del process
-        ids = request.form.get("ids")
-        source = request.form.get("source")
-        header = request.form.get("header")
-        skip_queries = request.form.get("skipQueries")
-        use_wiki_mirror = request.form.get("useWikiMirror")
-        if not source or not ids:
-            return {"success": False, "errors": ["You must provide at least one ID and source!"]}
-        while True:
-            query_id = random.randint(0, 100000000000)
-            if query_id not in in_process:
-                break
-        in_process[query_id] = {"finished": False, "last_requested": time.time()}
-        parser_handler = ParserHandler(lol_site, ids, source, header, skip_queries, use_wiki_mirror)
-        if parser_handler.process_input():
+        request_data = request.json if request.mimetype == "application/json" else request.form
+
+        task_id = uuid.uuid4().hex
+
+        parser_handler = ParserHandler(
+            lol_site,
+            request_data.get("ids"),
+            request_data.get("source"),
+            request_data.get("header"),
+            request_data.get("skipQueries"),
+            request_data.get("useWikiMirror")
+        )
+
+        parser_handler.process_and_validate_input()
+        if parser_handler.errors:
             return {"errors": parser_handler.errors, "success": False}
-        resp = {"queryId": query_id, "totalMatches": len(parser_handler.matches)}
-        Thread(target=parse_scoreboard, args=[parser_handler, query_id]).start()
+
+        resp = {"queryId": task_id, "totalMatches": len(parser_handler.game_ids)}
+        Thread(target=run_parse_scoreboard_task, args=[parser_handler, task_id]).start()
         return resp, 202
 
 
-def parse_scoreboard(parser_handler, query_id):
-    in_process[query_id]["parser_handler"] = parser_handler
+def run_parse_scoreboard_task(parser_handler, task_id):
+    tasks[task_id] = {"parser_handler": parser_handler}
     output, errors, warnings = parser_handler.run()
-    in_process[query_id] = {
-        "finished": True,
-        "last_requested": in_process.get(query_id)["last_requested"],
-        "data": {
-            "text": output,
-            "errors": errors,
-            "warnings": warnings
-        },
+    tasks[task_id]["finish_time"] = datetime.now().timestamp()
+    tasks[task_id]["return_data"] = {
+        "text": output,
+        "errors": errors,
+        "warnings": warnings
     }
 
 
-@app.route('/clearcache', methods=["GET", "POST"])
+@app.route('/clearcache', methods=["POST"])
 def clearcache():
     if request.method == "POST":
-        try:
-            lol_site.cache.clear()
-        except:
-            return {"success": False}
-        return {"success": True}
+        lol_site.cache.clear()
+        return "", 200
 
 
 if __name__ == "__main__":

@@ -15,40 +15,57 @@ class ParserHandler(object):
     def __init__(
         self,
         site: EsportsClient,
-        game_ids: str,
-        source: str,
-        header: str = None,
-        skip_queries: str = None,
-        use_leaguepedia_mirror: str = None,
+        game_ids: str | list[list[str]] = None,
+        source: str = None,
+        include_header: str | bool = True,
+        skip_queries: str | bool = False,
+        use_leaguepedia_mirror: str | bool = False,
     ):
         self.site = site
-        self.game_ids = game_ids.replace(" ", "").strip()
+        self.game_ids = game_ids
         self.source = source
-        self.header = True if header == "yes" else False
-        self.skip_queries = True if skip_queries == "yes" else False
-        self.use_leaguepedia_mirror = True if use_leaguepedia_mirror == "yes" else False
-        self.matches = []
+        self.include_header = self.cast_into_bool_if_necessary(include_header)
+        self.skip_queries = self.cast_into_bool_if_necessary(skip_queries)
+        self.use_leaguepedia_mirror = self.cast_into_bool_if_necessary(use_leaguepedia_mirror)
         self.raw_output = []
         self.errors = []
         self.warnings = []
         self.event_link = None
-        self.parsed_matches = 0
+        self.n_parsed_matches = 0
 
-    def process_input(self):
+    @staticmethod
+    def cast_into_bool_if_necessary(value):
+        if isinstance(value, bool):
+            return value
+        return True if value == "yes" else False
+
+    def process_and_validate_input(self):
         try:
-            self.split_game_ids()
+            if not self.game_ids or not self.source:
+                self.errors.append("A required parameter (either ids or source) is missing")
+                return
+            if isinstance(self.game_ids, list):
+                for match in self.game_ids:
+                    if not match:
+                        self.errors.append("A required parameter (either ids or source) is missing")
+                        return
+            self.cast_game_ids()
             if self.source not in self.ALLOWED_SOURCES:
-                raise InvalidGameSource(self.source)
+                self.errors.append("The provided source is invalid")
+                return
             self.event_link = self.query_event()
+        except InvalidInput:
+            self.errors.append("The provided game IDs are not correctly formatted")
+        except EventCannotBeLocated:
+            self.errors.append("The event for a game ID cannot be located")
         except:
             self.errors.append(traceback.format_exc().replace("\n", "<br>"))
-            return self.errors
 
     def run(self):
         try:
             if self.source == "qq" and self.use_leaguepedia_mirror:
                 raise Exception("QQ games can't be retrieved from the wiki!")
-            for match in self.matches:
+            for match in self.game_ids:
                 self.parse_match(match)
             output = self.make_output()
         except:
@@ -56,15 +73,24 @@ class ParserHandler(object):
             self.errors.append(traceback.format_exc().replace("\n", "<br>"))
         return output, self.errors, self.warnings
 
-    def split_game_ids(self):
-        for match in self.game_ids.split("\n\n"):
+    def cast_game_ids(self):
+        if isinstance(self.game_ids, list):
+            return
+
+        game_ids = self.game_ids.replace(" ", "").strip()
+
+        casted_game_ids = []
+
+        for match in game_ids.split("\n\n"):
             if self.source == "qq" and "\n" in match.strip():
                 raise InvalidInput
             games = match.split("\n")
-            self.matches.append(games)
+            casted_game_ids.append(games)
+
+        self.game_ids = casted_game_ids
 
     def get_where_event(self):
-        game_id = self.matches[0][0]
+        game_id = self.game_ids[0][0]
         if self.source == "qq":
             return (
                 f"MSG.MatchHistory = 'https://lpl.qq.com/es/stats.shtml?bmid={game_id}'"
@@ -98,10 +124,10 @@ class ParserHandler(object):
             match = match[0]
         else:
             raise InvalidGameSource(self.source)
-        match_output, match_warnings = parser.parse_series(match, self.header)
+        match_output, match_warnings = parser.parse_series(match, self.include_header)
         self.raw_output.append(match_output)
         self.warnings.extend(match_warnings)
-        self.parsed_matches += 1
+        self.n_parsed_matches += 1
 
     def make_output(self):
         if len(self.raw_output) > 1:
