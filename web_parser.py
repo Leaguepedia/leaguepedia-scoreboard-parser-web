@@ -21,6 +21,11 @@ def parser():
     return render_template('index.html')
 
 
+@app.route('/parser/help')
+def parser_help():
+    return render_template('help.html')
+
+
 @app.before_request
 def cleanup_old_tasks():
     global tasks

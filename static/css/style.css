@@ -13,7 +13,7 @@ html[data-theme="dark"] {
     --warning-color: #ffa700;
     --button-color: #242222;
     --button-background-color: white;
-    --button-background-color-hover: 
+    --link-color: #3ea6ff;
 }
 
 html[data-theme="light"] {
@@ -23,7 +23,7 @@ html[data-theme="light"] {
     --warning-color: #ab0000;
     --button-color: white;
     --button-background-color: black;
-    --button-background-color-hover: 
+    --link-color: rgb(0, 102, 204);
 }
 
 #main {
@@ -140,4 +140,13 @@ input.btn {
     justify-content: center;
     align-items: center;
     padding-top: 10px;
+}
+
+#help {
+    text-align: center;
+}
+
+#help a {
+    color: var(--link-color);
+    transition: color 1s;
 }

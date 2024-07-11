@@ -116,7 +116,7 @@ class ParserHandler(object):
     def parse_match(self, match):
         if self.source == "riot":
             parser = GridParser(self.site, self.event_link,
-                                 use_leaguepedia_mirror=self.use_leaguepedia_mirror)
+                                use_leaguepedia_mirror=self.use_leaguepedia_mirror)
         elif self.source == "riot-live":
             parser = LiveParser(self.site, self.event_link)
         elif self.source == "qq":

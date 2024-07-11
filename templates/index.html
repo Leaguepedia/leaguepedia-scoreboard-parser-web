@@ -27,6 +27,9 @@
                     <i class="fa-solid fa-moon fa-xl"></i>
                 </div>
             </div>
+            <div id="help">
+                <span><a href="parser/help" target="_blank" aria-label="Parser usage instructions (opens in new tab)">Parser usage help</a></span>
+            </div>
             <form id="parser-form" method="post" aria-label="Form used to input the game data to be parsed">
                 <label for="ids">IDs</label><br>
                 <textarea id="ids" name="ids" required="" spellcheck="false"></textarea><br>
@@ -36,7 +39,7 @@
                     <input type="radio" class="source" name="source" value="qq" id="qq"><label for="qq">QQ</label>
                     <input type="radio" class="source" name="source" value="riot-live" id="riot-live"><label for="riot-live">Riot Live</label>
                     <br>
-                    <label for="header">Header</label>
+                    <label for="header">Include header</label>
                     <input type="checkbox" class="header" name="header" id="header" value="yes" checked="" aria-describedby="header-desc">
                     <span id="header-desc">Check this only if you are parsing a BO1 or the first game of a series</span>
                     <br>
