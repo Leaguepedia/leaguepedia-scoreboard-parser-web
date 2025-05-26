@@ -3,3 +3,5 @@ Flask
 mwrogue
 pytz
 Flask-Autoversion
+gunicorn
+backoff
