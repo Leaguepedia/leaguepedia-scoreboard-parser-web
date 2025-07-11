@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from flaskext.autoversion import Autoversion
 
 from parser_handler import ParserHandler
+from mwrogue.auth_credentials import AuthCredentials
 from mwrogue.esports_client import EsportsClient
 from threading import Thread
 import uuid
@@ -11,7 +12,8 @@ app = Flask(__name__)
 app.autoversion = True
 Autoversion(app)
 
-lol_site = EsportsClient("lol")
+credentials = AuthCredentials(user_file="me")
+lol_site = EsportsClient("lol", credentials=credentials)
 
 tasks = {}
 
