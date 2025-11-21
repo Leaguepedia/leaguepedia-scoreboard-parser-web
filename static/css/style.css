@@ -6,7 +6,7 @@
     src: url('../vendor/fonts/roboto-v30-latin_latin-ext-regular.woff2') format('woff2');
 }  
 
-html[data-theme="dark"] {
+:root {
     --background-color: #242222;
     --text-color: white;
     --border-color: white;
@@ -14,16 +14,6 @@ html[data-theme="dark"] {
     --button-color: #242222;
     --button-background-color: white;
     --link-color: #3ea6ff;
-}
-
-html[data-theme="light"] {
-    --background-color: #eff3f5;
-    --text-color: black;
-    --border-color: black;
-    --warning-color: #ab0000;
-    --button-color: white;
-    --button-background-color: black;
-    --link-color: rgb(0, 102, 204);
 }
 
 #main {
@@ -37,7 +27,6 @@ body {
     background: var(--background-color);
     font-family: 'Roboto', sans-serif;
     color: var(--text-color);
-    transition: background 1s, color 1s;
 }
 
 h1 {
@@ -87,7 +76,6 @@ textarea {
     width: 100%;
     height: 150px;
     background: var(--background-color);
-    transition: background 1s, color 1s, border 1s;
     border: 1px solid var(--border-color);
     border-radius: 4px;
     color: var(--text-color);
@@ -100,7 +88,6 @@ textarea {
 }
 
 .warning {
-    transition: color 1s;
     color: var(--warning-color);
     font-weight: bold;
 }
@@ -111,10 +98,6 @@ textarea {
     display: block;
 }
 
-.toggle-theme {
-    cursor: pointer;
-}
-
 .btn {
 	border: 1px solid transparent;
 	background-color: var(--button-background-color);
@@ -123,7 +106,6 @@ textarea {
 	padding: 0.25rem;
 	font-size: 1rem;
 	font-family: inherit;
-    transition: color 1s, background 1s;
 }
 
 .btn:hover {
@@ -148,5 +130,4 @@ input.btn {
 
 #help a {
     color: var(--link-color);
-    transition: color 1s;
 }

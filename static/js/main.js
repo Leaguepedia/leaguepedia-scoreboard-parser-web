@@ -3,21 +3,6 @@ var timeout;
 var retries = 0;
 const MAX_RETRIES = 3;
 
-function toggleTheme(e) {
-    e.preventDefault()
-    e.stopPropagation()
-    let currentTheme = $(document.documentElement).attr("data-theme");
-    if (currentTheme == "dark") {
-        var newTheme = "light";
-        $(document.documentElement).attr("data-theme", newTheme);
-    } else {
-        var newTheme = "dark";
-        $(document.documentElement).attr("data-theme", newTheme);
-    }
-
-    localStorage.setItem("theme", newTheme);
-}
-
 function checkSource(source) {
     if (source == null) {
         source = "riot";
@@ -191,15 +176,5 @@ $(document).ready(function(){
         localStorage.clear()
         checkSource("riot");
         $(document.documentElement).attr("data-theme", "dark");
-    });
-
-    $(".toggle-theme").click(function(e) {
-        toggleTheme(e);
-    });
-
-    $(".toggle-theme").on("keydown", function(e) {
-        if (e.keyCode == 13) {
-            toggleTheme(e);
-        }
     });
 });
