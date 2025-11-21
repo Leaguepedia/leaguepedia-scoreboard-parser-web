@@ -175,6 +175,5 @@ $(document).ready(function(){
     $('#clear-prefs').click(function() {
         localStorage.clear()
         checkSource("riot");
-        $(document.documentElement).attr("data-theme", "dark");
     });
 });
