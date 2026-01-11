@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "leaguepedia-scoreboard-parser-web"
+version = "1.0.0"
+description = "Frontend for Leaguepedia Scoreboard Parser"
+authors = ["Santiago Kozak"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+leaguepedia-scoreboard-parser = {git = "https://github.com/Leaguepedia/leaguepedia-scoreboard-parser"}
+mwrogue = {git = "https://github.com/Leaguepedia/mwrogue.git", branch = "leaguepedia_fixes"}
+Flask = "^3.1"
+pytz = "^2025.2"
+Flask-Autoversion = "^0.2"
+gunicorn = "^23.0"
+backoff = "^2.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
