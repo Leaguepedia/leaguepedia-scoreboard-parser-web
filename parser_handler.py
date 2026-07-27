@@ -92,9 +92,7 @@ class ParserHandler(object):
     def get_where_event(self):
         game_id = self.game_ids[0][0]
         if self.source == "qq":
-            return (
-                f"MSG.MatchHistory = 'https://lpl.qq.com/es/stats.shtml?bmid={game_id}'"
-            )
+            return f"MSG.GridSeriesId = {game_id}"
         else:
             return f"MSG.RiotPlatformGameId = '{game_id}'"
 

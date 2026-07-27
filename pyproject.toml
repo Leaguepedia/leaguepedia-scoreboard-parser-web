@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "leaguepedia-scoreboard-parser-web"
-version = "1.0.0"
+version = "1.0.1"
 description = "Frontend for Leaguepedia Scoreboard Parser"
 authors = ["Santiago Kozak"]
 package-mode = false
@@ -8,6 +8,7 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.10"
 leaguepedia-scoreboard-parser = {git = "https://github.com/Leaguepedia/leaguepedia-scoreboard-parser"}
+mwcleric = {git = "https://github.com/Leaguepedia/mwcleric.git", branch = "leaguepedia_fixes"}
 mwrogue = {git = "https://github.com/Leaguepedia/mwrogue.git", branch = "leaguepedia_fixes"}
 Flask = "^3.1"
 pytz = "^2025.2"
