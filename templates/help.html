@@ -30,26 +30,25 @@
 </head>
 <body>
     <h1>Parser usage help</h1>
-    <p>This website takes Riot game IDs or GRID series ids (for games played in Chinese QQ servers) and generates scoreboards for them. The output scoreboard text is intended to be pasted on Leaguepedia.</p>
+    <p>This website takes Riot game IDs or QQ match IDs (used in the Chinese server) and generates scoreboards for them. The output scoreboard text is intended to be pasted on Leaguepedia.</p>
     <span>Important information:</span>
     <ul>
         <li>Remember that the IDs must be entered in Data before parsing scoreboards for them, otherwise the parser will throw an error.</li>
         <li>Do NOT change anything (player names, items, tournament, etc.) in the output text. If one of the players has a red link you need to create a redirect.</li>
         <li>If the parser returns warnings below the output, check if all the players are already in the participants section of the tournament, and click Clear Cache. If it still fails you can ask for help on Discord, but don't copy scoreboards in the wiki if there are warnings you don't understand.</li>
         <li>If you get warnings that you already fixed, click Clear Cache.</li>
-        <li>If you are parsing QQ games, keep in mind that the patch is taken from Data, so make sure the patch is correctly entered there.</li>
-        <li>To parse games from chinese servers, all teams must have their QQ ID set in Data:Teamnames</li>
+        <li>If you are parsing QQ IDs, keep in mind that the patch is taken from Data, so make sure the patch is correctly entered there.</li>
         <li>Ask on Discord if you are unsure about something.</li>
     </ul>
     <h2>IDs:</h2>
-    <p>You should fill the game/series IDs here. If you are using Riot game IDs, you need to enter one ID per line, you can also separate multiple series with blank lines. If you are using GRID series IDs, you have to leave one blank line between each other.</p>
+    <p>You should fill the game/series IDs here. If you are using Riot game IDs, you need to enter one ID per line, you can also separate multiple series with blank lines. If you are using QQ series IDs, you have to leave one blank line between each other.</p>
     <h3>Usage examples:</h3>
     <label for="ids1">IDs (Riot)</label><br>
     <textarea id="ids1" readonly>game1_series1&#13;&#10;game2_series1&#13;&#10;game3_series1&#13;&#10;&#13;&#10;game1_series2&#13;&#10;game2_series2</textarea><br>
     <label for="ids2">IDs (QQ)</label><br>
     <textarea id="ids2" readonly>1234&#13;&#10;&#13;&#10;1235&#13;&#10;&#13;&#10;1236</textarea>
     <h2>Game Source:</h2>
-    <p>If you are parsing Chinese games, select QQ. Otherwise, select Riot if the games were played on the tournament realm (in this case the ids start with ESPORTSTMNT or LOLTMNT), or Riot Live if they were played on a live server. Most times Riot is the correct option. Your selection will be remembered the next time you open the page.</p>
+    <p>If you are parsing QQ IDs, select QQ. Otherwise, select Riot if the games were played on the tournament realm (in this case the ids start with ESPORTSTMNT or LOLTMNT), or Riot Live if they were played on a live server. Most times Riot is the correct option. Your selection will be remembered the next time you open the page.</p>
     <h2>Include header:</h2>
     <p>Whether to include the series header in each parsed series. Only check this option if you are parsing a Best of 1 or the first game of series.</p>
 </body>
